@@ -55,7 +55,7 @@
       </div>
 
       <!-- Generated Tests Panel -->
-      <div class="mt-8">
+      <div ref="generatedTestsPanel" class="mt-8">
         <GeneratedTestsPanel
           :tests="store.generatedTests"
           :language="store.language"
@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick, watch } from 'vue';
 import { useAppStore } from './store/index.js';
 import CodeInputPanel from './components/CodeInputPanel.vue';
 import ConfigurationPanel from './components/ConfigurationPanel.vue';
@@ -107,6 +107,7 @@ import HistoryPanel from './components/HistoryPanel.vue';
 
 const store = useAppStore();
 const serverStatus = ref(false);
+const generatedTestsPanel = ref<HTMLElement>();
 
 const testsMetadata = computed(() => {
   // In a real app, this would come from the API response
@@ -141,6 +142,29 @@ const testsMetadata = computed(() => {
 const checkServerHealth = async () => {
   serverStatus.value = await store.checkServerHealth();
 };
+
+const scrollToResults = () => {
+  nextTick(() => {
+    if (generatedTestsPanel.value) {
+      generatedTestsPanel.value.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+};
+
+// Watch for successful test generation and scroll to results
+watch(
+  () => store.generatedTests,
+  (newTests, oldTests) => {
+    // Only scroll when tests are newly generated (not cleared or initial load)
+    if (newTests && newTests !== oldTests && !store.isLoading && newTests.trim().length > 0) {
+      // Small delay to ensure the UI has updated completely
+      setTimeout(scrollToResults, 300);
+    }
+  }
+);
 
 onMounted(async () => {
   await checkServerHealth();

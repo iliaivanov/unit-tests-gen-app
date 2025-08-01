@@ -264,6 +264,12 @@ npm run test:ui      # Run Vitest with UI
    - Ensure backend is running on correct port
    - Check CORS configuration
 
+4. **Frontend Build Issues (vue-tsc errors)**
+   - If you encounter vue-tsc compilation errors, try:
+   - `cd frontend && npm run dev` (development server works fine)
+   - Or build without type checking: `cd frontend && vite build`
+   - This is a known issue with some vue-tsc versions
+
 ### Performance Tips
 
 - Use smaller models for faster generation (e.g., `codellama:7b` vs `codellama:34b`)

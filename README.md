@@ -45,8 +45,10 @@ unit-tests-gen-app/
 ### Option 1: One-Command Startup (Recommended)
 
 ```bash
-# Install all dependencies
+# Install all dependencies (with helpful setup message)
 npm run setup
+# or just install without messages
+npm run install:all
 
 # Start both frontend and backend
 npm run dev
@@ -67,8 +69,10 @@ ollama pull codellama
 #### 2. Install Dependencies
 
 ```bash
-# Install all dependencies at once
+# Install all dependencies at once (with setup guidance)
 npm run setup
+# or without messages
+npm run install:all
 
 # Or install manually
 npm install
@@ -91,10 +95,14 @@ cd frontend && npm run dev   # Terminal 2
 
 ```bash
 # Start all services
+npm run docker:up
+# or
 docker-compose up -d
 
 # Pull Ollama model inside container
-docker exec -it unit-tests-gen-app-ollama-1 ollama pull codellama
+docker exec -it ollama ollama pull codellama
+# or using the actual container name
+docker exec $(docker-compose ps -q ollama) ollama pull codellama
 ```
 
 ## API Endpoints
@@ -184,33 +192,52 @@ VITE_API_BASE_URL=http://localhost:3000
 
 ## Development
 
+### Root Commands (Monorepo)
+
+```bash
+npm run dev          # Start both frontend and backend
+npm run build        # Build both frontend and backend
+npm run start        # Start both in production mode
+npm run setup        # Install dependencies with setup guidance
+npm run install:all  # Install dependencies for all packages
+npm run lint         # Run ESLint on both projects
+npm run test         # Run tests for both projects
+npm run clean        # Clean all node_modules and build directories
+npm run docker:up    # Start all services with Docker
+npm run docker:down  # Stop all Docker services
+npm run docker:build # Build Docker images
+```
+
 ### Backend Commands
 
 ```bash
 npm run dev          # Start development server
-npm run build        # Build for production
+npm run build        # Build TypeScript to JavaScript
 npm run start        # Start production server
 npm run lint         # Run ESLint
-npm test             # Run tests
+npm test             # Run all tests
+npm run test:watch   # Run tests in watch mode
 ```
 
 ### Frontend Commands
 
 ```bash
 npm run dev          # Start development server
-npm run build        # Build for production
+npm run build        # Build Vue.js app for production
 npm run preview      # Preview production build
 npm run lint         # Run ESLint
-npm test             # Run tests
+npm test             # Run Vitest tests
+npm run test:ui      # Run Vitest with UI
 ```
 
 ## Deployment
 
 ### Docker Deployment
 
-1. Ensure Ollama service is running
-2. Pull required models: `docker exec ollama ollama pull codellama`
-3. Start services: `docker-compose up -d`
+1. Build and start all services: `npm run docker:up` or `docker-compose up -d`
+2. Pull required models: `docker exec $(docker-compose ps -q ollama) ollama pull codellama`
+3. Access the application at http://localhost:5173
+4. Stop services: `npm run docker:down` or `docker-compose down`
 
 ### Manual Deployment
 

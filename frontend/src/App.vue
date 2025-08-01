@@ -27,6 +27,7 @@
             :language="store.language"
             @update:code="store.setCode"
             @update:language="store.setLanguage"
+            @clear-code="store.clearCode"
           />
         </div>
 
@@ -40,12 +41,15 @@
             :is-loading="store.isLoading"
             :available-models="store.availableModels"
             :server-status="serverStatus"
+            :has-code="store.hasCode"
+            :has-generated-tests="store.hasGeneratedTests"
             @update:language="store.setLanguage"
             @update:framework="store.setFramework"
             @update:model-config="store.setModelConfig"
             @generate="store.generateTests"
             @fetch-models="store.fetchAvailableModels"
             @check-health="checkServerHealth"
+            @clear-all="store.reset"
           />
         </div>
       </div>

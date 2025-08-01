@@ -1,6 +1,20 @@
 <template>
   <div class="card">
     <div class="mb-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Input Code</h3>
+        <button 
+          v-if="code.trim()"
+          @click="clearCode"
+          class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded border border-red-200 transition-colors"
+          title="Clear input code"
+        >
+          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Clear
+        </button>
+      </div>
       <CodeEditor
         :model-value="code"
         @update:model-value="$emit('update:code', $event)"
@@ -8,7 +22,7 @@
         :show-language-selector="true"
         @language-change="$emit('update:language', $event)"
         :height="editorHeight"
-        label="Input Code"
+        :label="null"
         placeholder="// Enter your function or method here
 function calculateTotal(items) {
   return items.reduce((sum, item) => sum + item.price, 0);
@@ -64,6 +78,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   'update:code': [code: string];
   'update:language': [language: ProgrammingLanguage];
+  'clear-code': [];
 }>();
 
 const showExamples = ref(false);
@@ -219,5 +234,9 @@ const loadExample = (example: CodeExample) => {
   emit('update:code', example.code);
   emit('update:language', example.language);
   showExamples.value = false;
+};
+
+const clearCode = () => {
+  emit('clear-code');
 };
 </script>

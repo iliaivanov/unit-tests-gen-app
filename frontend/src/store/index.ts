@@ -72,6 +72,11 @@ export const useAppStore = defineStore('app', () => {
     generatedTests.value = '';
   };
 
+  const clearCode = () => {
+    code.value = '';
+    error.value = null;
+  };
+
   const generateTests = async () => {
     if (!canGenerate.value) return;
 
@@ -238,6 +243,7 @@ export const useAppStore = defineStore('app', () => {
     setModelConfig,
     clearError,
     clearTests,
+    clearCode,
     generateTests,
     fetchAvailableModels,
     checkServerHealth,

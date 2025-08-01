@@ -18,10 +18,10 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <main class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
         <!-- Code Input Column -->
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 xl:col-span-3">
           <CodeInputPanel
             :code="store.code"
             :language="store.language"
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Configuration Column -->
-        <div class="lg:col-span-1">
+        <div class="lg:col-span-1 xl:col-span-1">
           <ConfigurationPanel
             :language="store.language"
             :framework="store.framework"

@@ -7,7 +7,7 @@
         :language="language"
         :show-language-selector="true"
         @language-change="$emit('update:language', $event)"
-        height="400px"
+        :height="editorHeight"
         label="Input Code"
         placeholder="// Enter your function or method here
 function calculateTotal(items) {
@@ -50,7 +50,7 @@ function calculateTotal(items) {
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import type { ProgrammingLanguage } from '../types/index.js';
 import CodeEditor from './CodeEditor.vue';
 
@@ -67,6 +67,26 @@ const emit = defineEmits<{
 }>();
 
 const showExamples = ref(false);
+
+// Responsive height calculation
+const screenHeight = ref(window.innerHeight);
+const editorHeight = computed(() => {
+  // Base heights for different screen sizes
+  const baseHeight = screenHeight.value < 768 ? 400 : screenHeight.value < 1200 ? 500 : 600;
+  return `${Math.min(baseHeight, Math.max(400, screenHeight.value * 0.4))}px`;
+});
+
+const updateScreenHeight = () => {
+  screenHeight.value = window.innerHeight;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateScreenHeight);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateScreenHeight);
+});
 
 interface CodeExample {
   name: string;

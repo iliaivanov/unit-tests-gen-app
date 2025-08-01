@@ -108,11 +108,14 @@ const createEditor = () => {
     automaticLayout: true,
     minimap: { enabled: false },
     scrollBeyondLastLine: false,
-    fontSize: 14,
+    fontSize: 15,
+    lineHeight: 22,
     fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace',
     lineNumbers: 'on',
     renderWhitespace: 'selection',
     wordWrap: 'on',
+    wordWrapColumn: 120,
+    wrappingIndent: 'indent',
     readOnly: props.readonly,
     contextmenu: true,
     selectOnLineNumbers: true,
@@ -123,7 +126,15 @@ const createEditor = () => {
     insertSpaces: true,
     folding: true,
     foldingStrategy: 'indentation',
-    showFoldingControls: 'always'
+    showFoldingControls: 'mouseover',
+    smoothScrolling: true,
+    cursorBlinking: 'smooth',
+    renderLineHighlight: 'gutter',
+    scrollbar: {
+      verticalScrollbarSize: 12,
+      horizontalScrollbarSize: 12,
+      useShadows: false
+    }
   });
 
   // Listen for content changes

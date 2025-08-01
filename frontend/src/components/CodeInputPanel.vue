@@ -51,7 +51,7 @@ function calculateTotal(items) {
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { ProgrammingLanguage } from '@/types';
+import type { ProgrammingLanguage } from '../types/index.js';
 import CodeEditor from './CodeEditor.vue';
 
 interface Props {

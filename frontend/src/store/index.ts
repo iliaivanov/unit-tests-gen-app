@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { apiService } from '@/services/api';
-import { 
-  AppState, 
+import { apiService } from '../services/api.js';
+import type { 
   ProgrammingLanguage, 
   TestingFramework, 
   ModelConfiguration,
   OllamaModel 
-} from '@/types';
+} from '../types/index.js';
 
 export const useAppStore = defineStore('app', () => {
   // State

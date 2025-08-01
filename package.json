@@ -1,0 +1,35 @@
+{
+  "name": "unit-tests-gen-app",
+  "version": "1.0.0",
+  "description": "Unit Test Generator Application - Full Stack",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run preview",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "clean": "rm -rf node_modules backend/node_modules frontend/node_modules backend/dist frontend/dist",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "setup": "npm run install:all && echo '\n✅ Dependencies installed! Next steps:\n1. Install Ollama: curl -fsSL https://ollama.ai/install.sh | sh\n2. Pull AI model: ollama pull codellama\n3. Start development: npm run dev'",
+    "postinstall": "echo 'Run npm run setup to install all dependencies'"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["unit-tests", "ai", "code-generation", "ollama", "vue", "express"],
+  "author": "",
+  "license": "MIT"
+}

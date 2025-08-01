@@ -188,7 +188,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { ProgrammingLanguage, TestingFramework, ModelConfiguration, OllamaModel } from '@/types';
+import type { ProgrammingLanguage, TestingFramework, ModelConfiguration, OllamaModel } from '../types/index.js';
 
 interface Props {
   language: ProgrammingLanguage;

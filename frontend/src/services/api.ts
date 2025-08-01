@@ -1,5 +1,6 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { TestGenerationRequest, GeneratedTests, ApiResponse, OllamaModel } from '@/types';
+import axios from 'axios';
+import type { AxiosInstance, AxiosResponse } from 'axios';
+import type { TestGenerationRequest, GeneratedTests, ApiResponse, OllamaModel } from '../types/index.js';
 
 class ApiService {
   private client: AxiosInstance;

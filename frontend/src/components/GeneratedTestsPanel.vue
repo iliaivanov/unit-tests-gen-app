@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ProgrammingLanguage, TestingFramework } from '@/types';
+import type { ProgrammingLanguage, TestingFramework } from '../types/index.js';
 import CodeEditor from './CodeEditor.vue';
 
 interface TestMetadata {

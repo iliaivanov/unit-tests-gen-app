@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import * as monaco from 'monaco-editor';
-import { ProgrammingLanguage } from '@/types';
+import type { ProgrammingLanguage } from '../types/index.js';
 
 interface Props {
   modelValue: string;

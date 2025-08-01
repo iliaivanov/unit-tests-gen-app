@@ -42,7 +42,29 @@ unit-tests-gen-app/
 - Ollama installed and running locally
 - Docker (optional, for containerized deployment)
 
-### 1. Install Ollama
+### Option 1: One-Command Startup (Recommended)
+
+```bash
+# Install all dependencies
+npm run setup
+
+# Start both frontend and backend
+npm run dev
+```
+
+**Or use the startup scripts:**
+
+```bash
+# For macOS/Linux
+./start-dev.sh
+
+# For Windows
+start-dev.bat
+```
+
+### Option 2: Manual Setup
+
+#### 1. Install Ollama
 
 ```bash
 # Install Ollama (macOS/Linux)
@@ -52,24 +74,30 @@ curl -fsSL https://ollama.ai/install.sh | sh
 ollama pull codellama
 ```
 
-### 2. Backend Setup
+#### 2. Install Dependencies
 
 ```bash
-cd backend
+# Install all dependencies at once
+npm run setup
+
+# Or install manually
 npm install
-cp .env.example .env
-npm run dev
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
 ```
 
-### 3. Frontend Setup
+#### 3. Start Development Servers
 
 ```bash
-cd frontend
-npm install
+# Start both servers with one command
 npm run dev
+
+# Or start them separately
+cd backend && npm run dev    # Terminal 1
+cd frontend && npm run dev   # Terminal 2
 ```
 
-### 4. Docker Setup (Alternative)
+### Option 3: Docker Setup
 
 ```bash
 # Start all services

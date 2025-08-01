@@ -85,10 +85,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useAppStore } from '@/store';
-import CodeInputPanel from '@/components/CodeInputPanel.vue';
-import ConfigurationPanel from '@/components/ConfigurationPanel.vue';
-import GeneratedTestsPanel from '@/components/GeneratedTestsPanel.vue';
+import { useAppStore } from './store/index.js';
+import CodeInputPanel from './components/CodeInputPanel.vue';
+import ConfigurationPanel from './components/ConfigurationPanel.vue';
+import GeneratedTestsPanel from './components/GeneratedTestsPanel.vue';
 
 const store = useAppStore();
 const serverStatus = ref(false);

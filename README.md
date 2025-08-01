@@ -52,16 +52,6 @@ npm run setup
 npm run dev
 ```
 
-**Or use the startup scripts:**
-
-```bash
-# For macOS/Linux
-./start-dev.sh
-
-# For Windows
-start-dev.bat
-```
-
 ### Option 2: Manual Setup
 
 #### 1. Install Ollama

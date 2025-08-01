@@ -5,6 +5,18 @@
       <div class="flex items-center space-x-2">
         <button 
           v-if="tests"
+          @click="copyToClipboard"
+          class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 transition-colors"
+          :class="{ 'bg-green-100 text-green-600': copySuccess }"
+          title="Copy tests to clipboard"
+        >
+          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          {{ copySuccess ? 'Copied!' : 'Copy' }}
+        </button>
+        <button 
+          v-if="tests"
           @click="downloadTests"
           class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors"
           title="Download tests"
@@ -88,21 +100,23 @@
       </div>
 
       <!-- Code Editor for Tests -->
-      <CodeEditor
+      <ResizableEditor
         :model-value="tests"
         :language="language"
         :readonly="true"
-        height="500px"
-        label="Generated Test Code"
-        :show-copy-button="true"
+        :default-height="500"
+        :min-height="200"
+        :max-height="1000"
+        storage-key="output-editor-height"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { ProgrammingLanguage, TestingFramework } from '../types/index.js';
-import CodeEditor from './CodeEditor.vue';
+import ResizableEditor from './ResizableEditor.vue';
 
 interface TestMetadata {
   testCount?: number;
@@ -126,8 +140,24 @@ const emit = defineEmits<{
   'clear-error': [];
 }>();
 
+const copySuccess = ref(false);
+
 const clearTests = () => {
   emit('clear-tests');
+};
+
+const copyToClipboard = async () => {
+  if (!props.tests) return;
+  
+  try {
+    await navigator.clipboard.writeText(props.tests);
+    copySuccess.value = true;
+    setTimeout(() => {
+      copySuccess.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error('Failed to copy to clipboard:', err);
+  }
 };
 
 const downloadTests = () => {

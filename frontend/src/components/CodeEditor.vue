@@ -216,7 +216,7 @@ const copyToClipboard = async () => {
 }
 
 .editor-container {
-  @apply border border-gray-300 rounded-lg overflow-hidden;
+  @apply rounded-lg overflow-hidden;
 }
 
 :deep(.placeholder-decoration) {

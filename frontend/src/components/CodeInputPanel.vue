@@ -3,26 +3,42 @@
     <div class="mb-4">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-900">Input Code</h3>
-        <button 
-          v-if="code.trim()"
-          @click="clearCode"
-          class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded border border-red-200 transition-colors"
-          title="Clear input code"
-        >
-          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-          Clear
-        </button>
+        <div class="flex items-center space-x-2">
+          <select 
+            :value="language" 
+            @change="$emit('update:language', ($event.target as HTMLSelectElement).value)"
+            class="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 transition-colors"
+          >
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="csharp">C#</option>
+            <option value="cpp">C++</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+          </select>
+          <button 
+            v-if="code.trim()"
+            @click="clearCode"
+            class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded border border-red-200 transition-colors"
+            title="Clear input code"
+          >
+            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Clear
+          </button>
+        </div>
       </div>
-      <CodeEditor
+      <ResizableEditor
         :model-value="code"
         @update:model-value="$emit('update:code', $event)"
         :language="language"
-        :show-language-selector="true"
-        @language-change="$emit('update:language', $event)"
-        :height="editorHeight"
-        :label="null"
+        :default-height="400"
+        :min-height="200"
+        :max-height="800"
+        storage-key="input-editor-height"
         placeholder="// Enter your function or method here
 function calculateTotal(items) {
   return items.reduce((sum, item) => sum + item.price, 0);
@@ -66,7 +82,7 @@ function calculateTotal(items) {
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import type { ProgrammingLanguage } from '../types/index.js';
-import CodeEditor from './CodeEditor.vue';
+import ResizableEditor from './ResizableEditor.vue';
 
 interface Props {
   code: string;
@@ -82,26 +98,6 @@ const emit = defineEmits<{
 }>();
 
 const showExamples = ref(false);
-
-// Responsive height calculation
-const screenHeight = ref(window.innerHeight);
-const editorHeight = computed(() => {
-  // Base heights for different screen sizes
-  const baseHeight = screenHeight.value < 768 ? 400 : screenHeight.value < 1200 ? 500 : 600;
-  return `${Math.min(baseHeight, Math.max(400, screenHeight.value * 0.4))}px`;
-});
-
-const updateScreenHeight = () => {
-  screenHeight.value = window.innerHeight;
-};
-
-onMounted(() => {
-  window.addEventListener('resize', updateScreenHeight);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateScreenHeight);
-});
 
 interface CodeExample {
   name: string;

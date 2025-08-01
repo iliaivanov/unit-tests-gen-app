@@ -61,6 +61,17 @@ export interface OllamaModel {
   modified_at: string;
 }
 
+export interface HistoryEntry {
+  id: string;
+  timestamp: Date;
+  request: TestGenerationRequest;
+  response: GeneratedTests;
+  metadata: {
+    testCount?: number;
+    executionTime?: number;
+  };
+}
+
 export interface AppState {
   code: string;
   language: ProgrammingLanguage;
@@ -70,4 +81,5 @@ export interface AppState {
   isLoading: boolean;
   error: string | null;
   availableModels: OllamaModel[];
+  history: HistoryEntry[];
 }

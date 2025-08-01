@@ -63,6 +63,16 @@
           @clear-error="store.clearError"
         />
       </div>
+
+      <!-- History Panel -->
+      <div class="mt-8">
+        <HistoryPanel
+          :history="store.history"
+          @load-entry="store.loadFromHistory"
+          @delete-entry="store.removeHistoryEntry"
+          @clear-history="store.clearHistory"
+        />
+      </div>
     </main>
 
     <!-- Footer -->
@@ -89,6 +99,7 @@ import { useAppStore } from './store/index.js';
 import CodeInputPanel from './components/CodeInputPanel.vue';
 import ConfigurationPanel from './components/ConfigurationPanel.vue';
 import GeneratedTestsPanel from './components/GeneratedTestsPanel.vue';
+import HistoryPanel from './components/HistoryPanel.vue';
 
 const store = useAppStore();
 const serverStatus = ref(false);

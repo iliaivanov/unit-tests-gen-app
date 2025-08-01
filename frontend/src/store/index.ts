@@ -5,7 +5,9 @@ import type {
   ProgrammingLanguage, 
   TestingFramework, 
   ModelConfiguration,
-  OllamaModel 
+  OllamaModel,
+  HistoryEntry,
+  TestGenerationRequest 
 } from '../types/index.js';
 
 export const useAppStore = defineStore('app', () => {
@@ -24,11 +26,13 @@ export const useAppStore = defineStore('app', () => {
   const isLoading = ref<boolean>(false);
   const error = ref<string | null>(null);
   const availableModels = ref<OllamaModel[]>([]);
+  const history = ref<HistoryEntry[]>([]);
 
   // Getters
   const hasCode = computed(() => code.value.trim().length > 0);
   const hasGeneratedTests = computed(() => generatedTests.value.trim().length > 0);
   const canGenerate = computed(() => hasCode.value && !isLoading.value);
+  const hasHistory = computed(() => history.value.length > 0);
 
   // Actions
   const setCode = (newCode: string) => {
@@ -75,15 +79,22 @@ export const useAppStore = defineStore('app', () => {
     error.value = null;
     generatedTests.value = '';
 
+    const startTime = Date.now();
+    const request: TestGenerationRequest = {
+      code: code.value,
+      language: language.value,
+      framework: framework.value,
+      modelConfig: modelConfig.value
+    };
+
     try {
-      const result = await apiService.generateTests({
-        code: code.value,
-        language: language.value,
-        framework: framework.value,
-        modelConfig: modelConfig.value
-      });
+      const result = await apiService.generateTests(request);
+      const executionTime = Date.now() - startTime;
 
       generatedTests.value = result.tests;
+
+      // Add to history
+      addToHistory(request, result, executionTime);
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to generate tests';
       console.error('Test generation failed:', err);
@@ -124,6 +135,84 @@ export const useAppStore = defineStore('app', () => {
     isLoading.value = false;
   };
 
+  // History management
+  const addToHistory = (request: TestGenerationRequest, response: any, executionTime: number) => {
+    const historyEntry: HistoryEntry = {
+      id: crypto.randomUUID(),
+      timestamp: new Date(),
+      request,
+      response,
+      metadata: {
+        executionTime,
+        testCount: response.metadata?.testCount
+      }
+    };
+
+    // Add to beginning of array and limit to 10 entries
+    history.value.unshift(historyEntry);
+    if (history.value.length > 10) {
+      history.value = history.value.slice(0, 10);
+    }
+
+    // Persist to localStorage
+    saveHistoryToStorage();
+  };
+
+  const loadFromHistory = (entry: HistoryEntry) => {
+    code.value = entry.request.code;
+    language.value = entry.request.language;
+    framework.value = entry.request.framework;
+    if (entry.request.modelConfig) {
+      modelConfig.value = { ...modelConfig.value, ...entry.request.modelConfig };
+    }
+    generatedTests.value = entry.response.tests;
+    error.value = null;
+  };
+
+  const removeHistoryEntry = (entryId: string) => {
+    const index = history.value.findIndex(entry => entry.id === entryId);
+    if (index !== -1) {
+      history.value.splice(index, 1);
+      saveHistoryToStorage();
+    }
+  };
+
+  const clearHistory = () => {
+    history.value = [];
+    saveHistoryToStorage();
+  };
+
+  const saveHistoryToStorage = () => {
+    try {
+      const historyData = history.value.map(entry => ({
+        ...entry,
+        timestamp: entry.timestamp.toISOString()
+      }));
+      localStorage.setItem('unit-test-generator-history', JSON.stringify(historyData));
+    } catch (error) {
+      console.warn('Failed to save history to localStorage:', error);
+    }
+  };
+
+  const loadHistoryFromStorage = () => {
+    try {
+      const stored = localStorage.getItem('unit-test-generator-history');
+      if (stored) {
+        const historyData = JSON.parse(stored);
+        history.value = historyData.map((entry: any) => ({
+          ...entry,
+          timestamp: new Date(entry.timestamp)
+        }));
+      }
+    } catch (error) {
+      console.warn('Failed to load history from localStorage:', error);
+      history.value = [];
+    }
+  };
+
+  // Initialize history from storage on store creation
+  loadHistoryFromStorage();
+
   return {
     // State
     code,
@@ -134,11 +223,13 @@ export const useAppStore = defineStore('app', () => {
     isLoading,
     error,
     availableModels,
+    history,
     
     // Getters
     hasCode,
     hasGeneratedTests,
     canGenerate,
+    hasHistory,
     
     // Actions
     setCode,
@@ -150,6 +241,11 @@ export const useAppStore = defineStore('app', () => {
     generateTests,
     fetchAvailableModels,
     checkServerHealth,
-    reset
+    reset,
+    
+    // History actions
+    loadFromHistory,
+    removeHistoryEntry,
+    clearHistory
   };
 });
